@@ -350,7 +350,7 @@ public:
 	auto try_set_until(U&& val, std::chrono::time_point<Clock, Duration> const& time) -> bool {
 		auto lock = write_lock_type{mutex, time};
 		if (lock) {
-			value = val;
+			value = std::forward<U>(val);
 		}
 		return lock.owns_lock();
 	}
