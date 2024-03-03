@@ -229,8 +229,8 @@ public:
 	auto operator=(synchronized_value const&) -> synchronized_value& = delete;
 	auto operator=(synchronized_value&&) -> synchronized_value& = delete;
 
-	template<typename U = T>
-	auto operator=(U&& val) -> synchronized_value& requires std::is_assignable_v<T&, U> {
+	template<typename U = T> requires std::is_assignable_v<T&, U>
+	auto operator=(U&& val) -> synchronized_value& {
 		set(std::forward<U>(val));
 		return *this;
 	}
@@ -253,8 +253,8 @@ public:
 		return value;
 	}
 
-	template<typename U = T>
-	auto set(U&& val) -> void requires std::is_assignable_v<T&, U> {
+	template<typename U = T> requires std::is_assignable_v<T&, U>
+	auto set(U&& val) -> void {
 		auto lock = write_lock_type{mutex};
 		value = std::forward<U>(val);
 	}
@@ -278,8 +278,8 @@ public:
 		return std::nullopt;
 	}
 
-	template<typename U = T>
-	auto try_set(U&& val) -> bool requires std::is_assignable_v<T&, U> {
+	template<typename U = T> requires std::is_assignable_v<T&, U>
+	auto try_set(U&& val) -> bool {
 		auto lock = write_lock_type{mutex, std::try_to_lock};
 		if (lock) {
 			value = std::forward<U>(val);
